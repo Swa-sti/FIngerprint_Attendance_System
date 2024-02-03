@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Class</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background: #ffffff;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .form-control {
+            border-color: #cccccc;
+        }
+
+        .btn-success {
+            background-color: #009432;
+            border-color: #009432;
+        }
+
+        .navbar {
+            background-color: #ddffcc;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <%- include('partials/navbar.ejs') %> 
+
+    <div class="container mt-5">
+
+        <h2>Create New Class</h2>
+
+        <form action="/createNewSection" method="POST">
+
+            <div class="form-group">
+                <label>Subject Name</label>
+                <input required name="subjectName" type="text" class="form-control" placeholder="Enter subject name">
+            </div>
+
+
+            <div class="form-group">
+                <label>Section</label>
+                <input required name="sectionName" type="text" class="form-control" placeholder="Section">
+            </div>
+
+
+            <button type="submit" class="btn btn-success">Create Class</button>
+
+        </form>
+
+    </div>
+
+</body>
+
+</html>

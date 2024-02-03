@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Register Student</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <style>
+    .fingerprint-icon {
+      font-size: 60px;
+      color: #00750e;
+      margin-bottom: 15px;
+    }
+
+    @keyframes fa-blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
+
+  .fa-blink {
+     -webkit-animation: fa-blink .75s linear infinite;
+     -moz-animation: fa-blink .75s linear infinite;
+     -o-animation: fa-blink .75s linear infinite;
+     animation: fa-blink .75s linear infinite;
+  }
+
+  .timeline {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px;
+    }
+
+    .circle {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background-color: blue;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <%- include('partials/navbar.ejs') %> 
+
+  <div class="container mt-5">
+
+    <% if(registered) { %>
+    <div class="alert alert-success" role="alert">
+      Student Registered Successfully
+    </div>
+    <% } %>
+
+    <div class="row">
+      <div class="col-md-6">
+        
+        <h2>Register New Student</h2>
+
+        <div class="timeline">
+          <div class="circle" id="circle1">1</div>
+          <div class="circle" id="circle2">2</div>
+          <div class="circle" id="circle3">3</div>
+          <div class="circle" id="circle4">4</div>
+          <div class="circle" id="circle5">5</div>
+        </div>  
+
+        <form method="POST" action="/student">
+
+          <div id="status" class="form-group text-center">
+            <i class="fas fa-fingerprint fingerprint-icon fa-blink"></i>
+            <div class="alert alert-success" role="alert" style="display: none;">
+              Fingerprint scanned successfully
+            </div>  
+            <div class="alert alert-primary" role="alert">
+              Kindly place your finger on the scanner
+            </div>  
+            <div class="alert alert-danger" role="alert" style="display: none;">
+              No finger was placed. Kindly retry
+            </div>  
+          </div>
+
+          <div class="form-group">
+            <label>Name</label>
+            <input required name="name" type="text" class="form-control" placeholder="Enter name">
+          </div>
+
+          <div class="form-group">
+            <label>UID</label>  
+            <input required name="uid" type="text" class="form-control" placeholder="Enter UID">
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Number</label>  
+            <input required name="mobileNumber" type="text" class="form-control" placeholder="Enter mobile number">
+          </div>
+
+          <input required name="sectionName" type="hidden" value="<%= sectionName %>"/>
+          <input required name="fingerprint1" type="hidden" value="NOT_SCANNED_YET"/>
+          <input required name="fingerprint2" type="hidden" value="NOT_SCANNED_YET"/>
+          <input required name="fingerprint3" type="hidden" value="NOT_SCANNED_YET"/>
+          <input required name="fingerprint4" type="hidden" value="NOT_SCANNED_YET"/>
+          <input required name="fingerprint5" type="hidden" value="NOT_SCANNED_YET"/>
+          
+          <button type="submit" class="btn btn-success btn-lg btn-block">
+            Register Student  
+          </button>
+
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+
+
+      var count = 1
+
+
+      var audio =  new Audio('/sounds/scanned.mp3')
+
+
+
+
+      function scanFingerprint(){
+        fetch('https://localhost:8000/SGIFPCapture')
+      .then(res=>res.json())
+      .then(data=>{
+
+
+        try{
+        audio.play()
+        }
+        catch(e){}
+
+        if(data['ErrorCode'] == 54){
+        document.querySelector('#status i').remove()
+        document.querySelector('.alert-primary').style.display = 'none'
+        document.querySelector('.alert-danger').style.display = 'block'
+        scanFingerprint()
+        return
+        }
+
+        try{
+        document.querySelector('#status i').remove()
+        }
+        catch(r){}
+        document.querySelector(`input[name="fingerprint${count}"]`).value = data['BMPBase64']
+        document.querySelector('.alert-primary').style.display = 'none'
+        document.querySelector('.alert-success').style.display = 'block'
+
+        increase(`circle${count}`)
+        count++
+
+        if(count<=5)
+        scanFingerprint()
+      })
+      }
+
+
+      function increase(circleId) {
+    const circle = document.getElementById(circleId);
+    if (circle) {
+      circle.style.backgroundColor = 'green';
+    }
+  }
+
+
+  scanFingerprint()
+
+
+
+  </script>
+
+
+</body>
+
+</html>
