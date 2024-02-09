@@ -12,7 +12,6 @@ function getCurrentDate() {
     return `${month} ${day}, ${year}`;
   }
 
-
   function getCurrentTime() {
     const currentDate = new Date();
     let hours = currentDate.getHours();
