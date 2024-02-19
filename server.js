@@ -3,8 +3,6 @@ const {getCollection, addToArray, set, deleteDoc, get}  = require('./utils/db')
 const { getCurrentDate, getCurrentTime } = require('./utils/dateTime')
 const session = require('express-session')
 
-
-
 const app = express()
 app.use(express.urlencoded({extended: true, limit: '50mb' }))
 app.use(express.json())
