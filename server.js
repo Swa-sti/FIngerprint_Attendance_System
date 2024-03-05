@@ -15,7 +15,6 @@ app.use(session({
     saveUninitialized: false
   }));
 
-
 function checkAuthentication(req, res, next){
 
     console.log(req.path.split('/')[1]);
